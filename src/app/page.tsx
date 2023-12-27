@@ -26,7 +26,7 @@ export default function Home() {
             '>Logout</button>
           </div>
         </div>
-        <div className='bg-blue-200 grow text-sm'>
+        <div className='bg-blue-200 grow text-sm  overflow-auto my-1 px-2'>
           <div className='flex flex-col gap-3'>
             {msg.map((text) => {
               return <Message message={text} owner = {true}/>
