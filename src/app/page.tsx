@@ -1,12 +1,26 @@
 "use client"
 
-import Image from 'next/image'
-import { useState } from "react"
+
+import { useState , useEffect } from "react"
 import Message from './Components/Message'
+import { addDoctoDb, updateDocinDb } from 'utils/Utils'
+import { doc, onSnapshot } from "firebase/firestore";
+import {db} from "../firebase/firebase"
+
+
 export default function Home() {
-  let [msg, setmsg] = useState<string[]>([])
+  let [msg, setmsg] = useState<{message : string, id : 1|2}[]>([])
   let [currMsg, setCurrMsg] = useState<string>("")
+  let [id , setid] = useState<number>(1)
+  
   // console.log( currMsg)
+  useEffect(()=>{
+    const unsub = onSnapshot(doc(db, "chats", "LA"), (doc) => {
+      // console.log("Current data: ", doc.data().region);
+      setmsg(doc.data().region)
+  });
+  })
+
   return (
     <div className='min-h-screen h-1'>
       <h1 className='text-xl font-bold text-center'>
@@ -28,8 +42,8 @@ export default function Home() {
         </div>
         <div className='bg-blue-200 grow text-sm  overflow-auto my-1 px-2'>
           <div className='flex flex-col gap-3'>
-            {msg.map((text) => {
-              return <Message message={text} owner = {true}/>
+          {msg.map((text, i) => {
+              return <Message message={text.message} key={i} owner = {true}/>
             })}
           </div>
         </div>
@@ -41,8 +55,13 @@ export default function Home() {
            focus:outline-none 
           ' />
           <button onClick={
-            () => {
-              setmsg([...msg, currMsg])
+            async () => {
+              await updateDocinDb(currMsg, id)
+              // setmsg([...msg, currMsg])
+              if(id ==1) {
+                setid(2)
+              }
+              else setid(1)
               setCurrMsg("")
             }
           } className='self-center float-right py-1 px-3 bg-sky-500  text-white font-bold
