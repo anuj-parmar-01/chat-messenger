@@ -19,7 +19,7 @@ export default function Home() {
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "chats", "LA"), (doc) => {
       // console.log("Current data: ", doc.data().region);
-      setmsg(doc.data().region)
+      setmsg({doc.data().message,doc.data().id})
     });
   })
 

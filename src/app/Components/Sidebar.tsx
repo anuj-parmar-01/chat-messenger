@@ -3,20 +3,22 @@ import SidebarChat from "./SidebarChat"
 import { collection, getDocs, query , where } from "firebase/firestore"
 import { db } from "firebase/firebase"
 
+interface Props {
+    setUser:  React.Dispatch<React.SetStateAction<string>>,
+}
 
-
-export default function Sidebar() {
+export default function Sidebar(props : Props) {
     const [userName, setUserName] = useState<string>("")
     const [err, setErr] = useState<boolean>(false)
     
      
-    const handleSearch = async (setUser : React.Dispatch<React.SetStateAction<string>>) => {
+    const handleSearch = async () => {
         const q = query(collection(db,"users"), where( "UserName", "==" ,userName))
           
         try {
             const querySnapshot = await getDocs(q)
             querySnapshot.forEach((doc) => {
-                setUser(doc.data())
+                props.setUser(doc.data().name)
             })
         }
         catch(err) {
