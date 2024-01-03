@@ -13,6 +13,7 @@ export default function Home() {
   let [msg, setmsg] = useState<{ message: string, id: 1 | 2 }[]>([])
   let [currMsg, setCurrMsg] = useState<string>("")
   let [id, setid] = useState<number>(1)
+  const [currentUser , setCurrentUser] = useState<string>("")
 
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function Home() {
         This is Chat Messenger
       </h1>
       <div className="h-3/4 flex w-3/4 mx-auto">
-        <Sidebar />
+        <Sidebar  setUser ={setCurrentUser}/>
         <div className='bg-blue-200 min-h-full grow mx-auto flex flex-col border-2 border-slate-400
       rounded-md 
       '>
