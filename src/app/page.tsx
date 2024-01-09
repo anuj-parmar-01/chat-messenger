@@ -4,9 +4,10 @@
 import { useState, useEffect } from "react"
 import Message from './Components/Message'
 import { addDoctoDb, getUsers, updateDocinDb } from 'utils/Utils'
-import { doc, onSnapshot } from "firebase/firestore";
+import { DocumentData, DocumentReference, DocumentSnapshot, QueryDocumentSnapshot, QuerySnapshot, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebase"
 import Sidebar from "./Components/Sidebar";
+
 
 
 export default function Home() {
@@ -17,11 +18,13 @@ export default function Home() {
 
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "chats", "LA"), (doc) => {
+    const unsub = onSnapshot (doc(db, "chats", "LA"), (doc) => {
       // console.log("Current data: ", doc.data().region);
-      setmsg({doc.data().message,doc.data().id})
+      // setmsg([{"message" : doc.get("message"), "id":1}])
+      if(doc.exists()) setmsg([doc.data()])
+      
     });
-  })
+  }, [currentUser])
 
   return (
     <div className='min-h-screen h-1'>
@@ -37,7 +40,7 @@ export default function Home() {
             <div className='flex justify-between mt-2'>
               <div>
                 <img src="" alt="" />
-                <span className='text-white leading-tight'>User Name</span>
+                <span className='text-white leading-tight'>{currentUser||"User Name"}</span>
               </div>
               <button className='text-white px-2 py-1 text-sm rounded-md bg-sky-400
             hover:bg-sky-700
