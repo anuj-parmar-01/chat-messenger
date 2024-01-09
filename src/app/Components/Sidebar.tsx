@@ -1,24 +1,29 @@
 import React, { ChangeEvent, useState } from "react"
 import SidebarChat from "./SidebarChat"
 import { collection, getDocs, query , where } from "firebase/firestore"
-import { db } from "firebase/firebase"
+// import { db } from "../../firebase/firebase"
+import { db } from "../../firebase/firebase"
 
 interface Props {
     setUser:  React.Dispatch<React.SetStateAction<string>>,
 }
 
-export default function Sidebar(props : Props) {
+export default function Sidebar(props:Props) {
     const [userName, setUserName] = useState<string>("")
     const [err, setErr] = useState<boolean>(false)
     
      
     const handleSearch = async () => {
-        const q = query(collection(db,"users"), where( "UserName", "==" ,userName))
+        const q = query(collection(db,"users"), where( "name", "==" ,userName))
+        // const q = query(collection(db,"users"))
+        console.log( q )
           
         try {
             const querySnapshot = await getDocs(q)
+            console.log(querySnapshot)
             querySnapshot.forEach((doc) => {
                 props.setUser(doc.data().name)
+                console.log(doc.data())
             })
         }
         catch(err) {
@@ -48,6 +53,7 @@ export default function Sidebar(props : Props) {
                 <SidebarChat />
 
             </div>
+            <button onClick={handleSearch}>dekh le </button>
         </div>
     )
 }
