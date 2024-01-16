@@ -8,13 +8,19 @@ import { DocumentData, DocumentReference, DocumentSnapshot, QueryDocumentSnapsho
 import { db } from "../firebase/firebase"
 import Sidebar from "./Components/Sidebar";
 
-
+interface userList {
+  name : string,
+  user : {
+      name : string,
+      id : number
+  }
+}
 
 export default function Home() {
   let [msg, setmsg] = useState<{ message: string, id: 1 | 2 }[]>([])
   let [currMsg, setCurrMsg] = useState<string>("")
   let [id, setid] = useState<number>(1)
-  const [currentUser , setCurrentUser] = useState<string>("")
+  const [currentUser , setCurrentUser] = useState<userList | {}>({})
 
 
   useEffect(() => {
@@ -26,6 +32,9 @@ export default function Home() {
     });
   }, [currentUser])
 
+  const setChats = async () => {
+   
+  }
   return (
     <div className='min-h-screen h-1'>
       <h1 className='text-xl font-bold text-center'>
@@ -40,7 +49,7 @@ export default function Home() {
             <div className='flex justify-between mt-2'>
               <div>
                 <img src="" alt="" />
-                <span className='text-white leading-tight'>{currentUser||"User Name"}</span>
+                <span className='text-white leading-tight'>{currentUser?.name||"User Name"}</span>
               </div>
               <button className='text-white px-2 py-1 text-sm rounded-md bg-sky-400
             hover:bg-sky-700
@@ -63,7 +72,7 @@ export default function Home() {
           ' />
             <button onClick={
               async () => {
-                await updateDocinDb(currMsg, id)
+                // await updateDocinDb(currMsg )
                 await getUsers()
                 // setmsg([...msg, currMsg])
                 if (id == 1) {
