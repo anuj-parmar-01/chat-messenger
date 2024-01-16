@@ -1,16 +1,18 @@
-import React, { ChangeEvent, useState } from "react"
+"use client"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import SidebarChat from "./SidebarChat"
 import { collection, getDocs, query , where } from "firebase/firestore"
 // import { db } from "../../firebase/firebase"
 import { db } from "../../firebase/firebase"
-
+import {userList} from "../../utils/Utils"
 interface Props {
-    setUser:  React.Dispatch<React.SetStateAction<string>>,
+    setUser:  React.Dispatch<React.SetStateAction<userList>>,
 }
 
 export default function Sidebar(props:Props) {
     const [userName, setUserName] = useState<string>("")
     const [err, setErr] = useState<boolean>(false)
+    const [friendsList , setList] = useState<userList[]>([])
     
      
     const handleSearch = async () => {
@@ -30,7 +32,25 @@ export default function Sidebar(props:Props) {
          setErr(true)         
         }
     }
-
+   useEffect( () =>{
+    async function getFriendsList(){
+        const q = query(collection(db,"users"))
+        let list: userList[]= []
+        try {
+            const querySnapshot = await getDocs(q)
+            console.log(querySnapshot)
+            querySnapshot.forEach((doc) => {
+               list.push(doc.data())
+                
+            })
+        }
+        catch (err) {
+            console.log(err,"err")
+        }
+        setList(list)
+    }
+     getFriendsList()
+   },[])
     return (
         <div className="bg-blue-400 w-1/3 rounded-md ">
             <div className='bg-blue-700 h-12 px-4 border-black border-2 rounded-md rounded-b-none'>
@@ -48,10 +68,9 @@ export default function Sidebar(props:Props) {
                 <input onChange={(e :ChangeEvent<HTMLInputElement> ) => setUserName(e.target.value)} type="text" placeholder="Find a user"/>
             </div>
             <div className="flex flex-col gap-2 text-sm">
-                <SidebarChat />
-                <SidebarChat />
-                <SidebarChat />
-
+                {friendsList.map((user, i) => {
+                    return <div key={i} onClick={()=> props.setUser(user)}><SidebarChat/></div>
+                })}
             </div>
             <button onClick={handleSearch}>dekh le </button>
         </div>
