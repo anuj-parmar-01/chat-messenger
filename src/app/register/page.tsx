@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import {auth} from "../../firebase/firebase"
 import { useRouter } from 'next/navigation'
 import { addUser } from 'utils/Utils';
+import { News_Cycle } from 'next/font/google';
 
 export default function Login() {
     const [name, setName] = useState<string>("")
@@ -19,9 +20,12 @@ export default function Login() {
       let NewUser = {
         name : name ,
         photo : "",
-        id : userCredential.user.accessToken.slice(0,21)
+        id : userCredential.user.uid.slice(0,21)
       }
+      console.log(userCredential)
      await addUser(NewUser)
+    //  localStorage.setItem("user" , JSON.stringify(NewUser))
+     router.push("/login")
 
     })
     .catch((error) => {
@@ -88,7 +92,7 @@ export default function Login() {
                     {" "}
                    Already have an account?{" "}
                     <button
-                        onClick ={() => router.push("/register")}
+                        onClick ={() => router.push("/login")}
                         className="font-medium text-purple-600 hover:underline"
                     >
                         Sign in

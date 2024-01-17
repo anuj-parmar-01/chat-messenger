@@ -4,9 +4,9 @@ import SidebarChat from "./SidebarChat"
 import { collection, getDocs, query , where } from "firebase/firestore"
 // import { db } from "../../firebase/firebase"
 import { db } from "../../firebase/firebase"
-import {userList} from "../../utils/Utils"
+import {user, userList} from "../../utils/Utils"
 interface Props {
-    setUser:  React.Dispatch<React.SetStateAction<userList>>,
+    setUser:  (friend : user)=> Promise<void>,
 }
 
 export default function Sidebar(props:Props) {
