@@ -3,6 +3,7 @@ import React, {  useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import {auth} from "../../firebase/firebase"
 import { useRouter } from 'next/navigation'
+import { getUsers } from 'utils/Utils';
 export default function Login() {
    const [email,setEmail] = useState<string>("")
    const [password,setpswd] = useState<string>("")
@@ -11,8 +12,10 @@ export default function Login() {
   async  function submit (e : any){
     e.preventDefault()
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       // Signed in 
+      let user = await getUsers(userCredential.user.uid.slice(0,21))
+      sessionStorage.setItem("user",JSON.stringify(user))
       router.push('/')
     })
     .catch((error) => {
